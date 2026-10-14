@@ -1,0 +1,6 @@
+{
+  "name": "Hooden - Bois de Chauffage Premium & Énergie Forestière",
+  "description": "Plateforme d'excellence pour l'achat de bois de chauffage haute performance : chêne, charme, hêtre séché sous 20% d'humidité, pellets certifiés EnPlus A1, calculateur de stères, livraison sur mesure en Île-de-France et France entière, facturation chirurgicale conforme.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
