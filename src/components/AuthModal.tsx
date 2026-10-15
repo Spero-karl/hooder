@@ -63,7 +63,7 @@ export const AuthModal: React.FC = () => {
             >
               <div>
                 <div className="font-semibold text-neutral-900">Compte Professionnel : Boulangerie Fournil SAS</div>
-                <div className="text-[10px] text-neutral-500">Paris 17e • Facturation avec SIRET & TVA 10%</div>
+                <div className="text-[10px] text-neutral-500">Paris 17e • Factures & livraisons régulières</div>
               </div>
               <ArrowRight className="w-3.5 h-3.5 text-amber-800" />
             </button>

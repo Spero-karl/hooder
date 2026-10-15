@@ -122,10 +122,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
     showNotification({
       id: String(Date.now()),
-      title: 'Sélection ajoutée au panier',
-      message: `${product.name} (x${quantity})`,
+      title: 'Ajouté au panier',
+      message: `${product.name} (x${quantity}) · ${(product.priceTTC * quantity).toFixed(2)} €`,
       thumbnail: product.imageUrl,
-      badge: product.volumeSteres > 0 ? `${product.volumeSteres * quantity} stères` : product.packaging,
       actionLabel: 'Voir le panier',
       onAction: () => setIsCartOpen(true),
       type: 'cart',

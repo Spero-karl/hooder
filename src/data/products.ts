@@ -1,5 +1,16 @@
 import { Product, DeliveryOption } from '../types';
 
+import imgOakPallet from '../assets/images/firewood_oak_pallet_1791912459864.jpg';
+import imgMoistureMeter from '../assets/images/wood_moisture_meter_1791979211082.jpg';
+import imgCompactPallet from '../assets/images/compact_pallet_firewood_1791979209712.jpg';
+import imgCharmeLogs from '../assets/images/firewood_charme_logs_1791912482581.jpg';
+import imgShortLogs from '../assets/images/short_logs_crosssection_1791979211097.jpg';
+import imgHetrePile from '../assets/images/firewood_hetre_pile_1791912502562.jpg';
+import imgAshLarge from '../assets/images/firewood_ash_large_1791912520134.jpg';
+import imgStackCord from '../assets/images/firewood_stack_cord_1791912561695.jpg';
+import imgBigBag from '../assets/images/bigbag_firewood_yard_1791979210072.jpg';
+import imgTruckTipper from '../assets/images/firewood_truck_tipper_1791979209811.jpg';
+
 export const PRODUCTS: Product[] = [
   {
     id: 'lot-chene-33-palette-2st',
@@ -32,11 +43,11 @@ export const PRODUCTS: Product[] = [
       labelNF: true,
       pefc: true,
     },
-    imageUrl: '/src/assets/images/firewood_oak_pallet_1791912459864.jpg',
+    imageUrl: imgOakPallet,
     galleryImages: [
-      '/src/assets/images/firewood_oak_pallet_1791912459864.jpg',
-      '/src/assets/images/wood_moisture_meter_1791979211082.jpg',
-      '/src/assets/images/compact_pallet_firewood_1791979209712.jpg'
+      imgOakPallet,
+      imgMoistureMeter,
+      imgCompactPallet
     ]
   },
   {
@@ -70,11 +81,11 @@ export const PRODUCTS: Product[] = [
       labelNF: true,
       pefc: true,
     },
-    imageUrl: '/src/assets/images/firewood_charme_logs_1791912482581.jpg',
+    imageUrl: imgCharmeLogs,
     galleryImages: [
-      '/src/assets/images/firewood_charme_logs_1791912482581.jpg',
-      '/src/assets/images/short_logs_crosssection_1791979211097.jpg',
-      '/src/assets/images/wood_moisture_meter_1791979211082.jpg'
+      imgCharmeLogs,
+      imgShortLogs,
+      imgMoistureMeter
     ]
   },
   {
@@ -108,10 +119,10 @@ export const PRODUCTS: Product[] = [
       labelNF: true,
       pefc: true,
     },
-    imageUrl: '/src/assets/images/firewood_hetre_pile_1791912502562.jpg',
+    imageUrl: imgHetrePile,
     galleryImages: [
-      '/src/assets/images/firewood_hetre_pile_1791912502562.jpg',
-      '/src/assets/images/wood_moisture_meter_1791979211082.jpg'
+      imgHetrePile,
+      imgMoistureMeter
     ]
   },
   {
@@ -145,10 +156,10 @@ export const PRODUCTS: Product[] = [
       labelNF: true,
       pefc: true,
     },
-    imageUrl: '/src/assets/images/firewood_ash_large_1791912520134.jpg',
+    imageUrl: imgAshLarge,
     galleryImages: [
-      '/src/assets/images/firewood_ash_large_1791912520134.jpg',
-      '/src/assets/images/wood_moisture_meter_1791979211082.jpg'
+      imgAshLarge,
+      imgMoistureMeter
     ]
   },
   {
@@ -180,11 +191,11 @@ export const PRODUCTS: Product[] = [
       recommendedAppliance: ['Poêles récents', 'Inserts'],
       barkPercentage: '< 9%',
     },
-    imageUrl: '/src/assets/images/firewood_stack_cord_1791912561695.jpg',
+    imageUrl: imgStackCord,
     galleryImages: [
-      '/src/assets/images/firewood_stack_cord_1791912561695.jpg',
-      '/src/assets/images/short_logs_crosssection_1791979211097.jpg',
-      '/src/assets/images/wood_moisture_meter_1791979211082.jpg'
+      imgStackCord,
+      imgShortLogs,
+      imgMoistureMeter
     ]
   },
   {
@@ -215,10 +226,10 @@ export const PRODUCTS: Product[] = [
       recommendedAppliance: ['Tous poêles', 'Inserts'],
       barkPercentage: '< 10%',
     },
-    imageUrl: '/src/assets/images/compact_pallet_firewood_1791979209712.jpg',
+    imageUrl: imgCompactPallet,
     galleryImages: [
-      '/src/assets/images/compact_pallet_firewood_1791979209712.jpg',
-      '/src/assets/images/wood_moisture_meter_1791979211082.jpg'
+      imgCompactPallet,
+      imgMoistureMeter
     ]
   },
   {
@@ -249,10 +260,10 @@ export const PRODUCTS: Product[] = [
       recommendedAppliance: ['Poêles étanches', 'Petits foyers'],
       barkPercentage: '< 8%',
     },
-    imageUrl: '/src/assets/images/short_logs_crosssection_1791979211097.jpg',
+    imageUrl: imgShortLogs,
     galleryImages: [
-      '/src/assets/images/short_logs_crosssection_1791979211097.jpg',
-      '/src/assets/images/wood_moisture_meter_1791979211082.jpg'
+      imgShortLogs,
+      imgMoistureMeter
     ]
   },
   {
@@ -285,10 +296,10 @@ export const PRODUCTS: Product[] = [
       labelNF: true,
       pefc: true,
     },
-    imageUrl: '/src/assets/images/bigbag_firewood_yard_1791979210072.jpg',
+    imageUrl: imgBigBag,
     galleryImages: [
-      '/src/assets/images/bigbag_firewood_yard_1791979210072.jpg',
-      '/src/assets/images/firewood_truck_tipper_1791979209811.jpg'
+      imgBigBag,
+      imgTruckTipper
     ]
   },
   {
@@ -322,10 +333,10 @@ export const PRODUCTS: Product[] = [
       labelNF: true,
       pefc: true,
     },
-    imageUrl: '/src/assets/images/firewood_truck_tipper_1791979209811.jpg',
+    imageUrl: imgTruckTipper,
     galleryImages: [
-      '/src/assets/images/firewood_truck_tipper_1791979209811.jpg',
-      '/src/assets/images/wood_moisture_meter_1791979211082.jpg'
+      imgTruckTipper,
+      imgMoistureMeter
     ]
   }
 ];

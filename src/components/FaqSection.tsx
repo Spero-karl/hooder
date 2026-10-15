@@ -35,9 +35,9 @@ const FAQS: FaqItem[] = [
   },
   {
     category: 'billing',
-    categoryLabel: 'Facture & TVA 10%',
-    question: 'Comment recevoir ma facture avec TVA réduite à 10% ?',
-    answer: 'La facture fiscale conforme est générée dès validation de commande avec la TVA légale à 10% (Art. 278-0 bis du CGI). Téléchargeable immédiatement en PDF et imprimable depuis votre espace client.',
+    categoryLabel: 'Facturation',
+    question: 'Comment obtenir ma facture ?',
+    answer: 'Votre facture est générée dès la validation de votre commande. Vous pouvez la consulter, l\'imprimer ou la télécharger directement depuis le site.',
   },
 ];
 
@@ -73,7 +73,7 @@ export const FaqSection: React.FC = () => {
             { id: 'moisture', label: 'Humidité & Séchage' },
             { id: 'storage', label: 'Conseils de Stockage' },
             { id: 'delivery', label: 'Livraison & Chariot' },
-            { id: 'billing', label: 'Facture & TVA 10%' },
+            { id: 'billing', label: 'Facturation' },
           ].map((tab) => (
             <button
               key={tab.id}

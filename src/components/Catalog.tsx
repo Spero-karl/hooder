@@ -54,7 +54,7 @@ export const Catalog: React.FC<{
               Catalogue Officiel des Lots en Stock
             </h2>
             <p className="text-xs sm:text-sm text-neutral-600 mt-1 max-w-2xl">
-              Chêne, charme, hêtre et frêne séchés prêts à l'emploi. Prix transparents avec TVA 10% incluse et dépose soignée avec chariot tout-terrain.
+              Chêne, charme, hêtre et frêne séchés prêts à l'emploi. Tarifs nets et livraison à domicile.
             </p>
           </div>
 
@@ -228,9 +228,6 @@ export const Catalog: React.FC<{
                         )}
                         <div className="text-2xl font-black font-mono-hooden text-neutral-900">
                           {totalLotTTC.toFixed(2)} €
-                        </div>
-                        <div className="text-[10px] text-neutral-500 font-mono-hooden">
-                          TTC · TVA 10% incluse
                         </div>
                       </div>
 

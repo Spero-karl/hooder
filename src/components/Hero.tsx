@@ -194,7 +194,7 @@ export const Hero: React.FC<{
             </div>
             <div className="text-xs font-bold text-neutral-900">Prix direct producteur</div>
             <div className="text-[11px] text-neutral-500 leading-normal">
-              Tarif clair avec TVA légale à 10% incluse sur tous nos bois.
+              Tarifs nets directs du dépôt sans intermédiaire.
             </div>
           </div>
 

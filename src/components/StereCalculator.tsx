@@ -299,10 +299,10 @@ export const StereCalculator: React.FC<{
                   <div className="p-3 bg-neutral-800/40 rounded-lg border border-neutral-800">
                     <div className="text-neutral-400 text-[11px] flex items-center gap-1">
                       <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-                      Prix Hooden TTC
+                      Prix estimé Hooden
                     </div>
                     <div className="text-base font-bold text-amber-400 mt-1">
-                      {hoodenEstimatedCost} € TTC
+                      {hoodenEstimatedCost} €
                     </div>
                     <div className="text-[10px] text-emerald-400 font-sans font-medium">
                       Économie ~{estimatedSavings} € vs marché

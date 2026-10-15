@@ -144,7 +144,7 @@ export const ProductDetailModal: React.FC = () => {
                   {totalPrice.toFixed(2)} €
                 </div>
                 <div className="text-[11px] text-neutral-500 font-mono-hooden">
-                  TTC ({product.unit}) · TVA légale 10% incluse
+                  {product.unit}
                 </div>
               </div>
 

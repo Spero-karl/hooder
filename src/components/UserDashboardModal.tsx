@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useApp } from '../context/AppContext';
 import { User, FileText, Truck, MapPin, LogOut, X, Package } from 'lucide-react';
 
@@ -17,6 +17,17 @@ export const UserDashboardModal: React.FC = () => {
 
   const [activeTab, setActiveTab] = useState<'orders' | 'invoices'>('orders');
 
+  useEffect(() => {
+    if (!isDashboardOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setIsDashboardOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isDashboardOpen, setIsDashboardOpen]);
+
   if (!isDashboardOpen || !user) return null;
 
   const handleReorder = (order: any) => {
@@ -28,8 +39,16 @@ export const UserDashboardModal: React.FC = () => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs p-3 sm:p-6 overflow-y-auto">
-      <div className="bg-white border border-neutral-200 rounded-2xl max-w-3xl w-full text-neutral-900 shadow-2xl relative my-6 flex flex-col max-h-[92vh]">
+    <div
+      onClick={() => setIsDashboardOpen(false)}
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-3 sm:p-6 overflow-y-auto cursor-pointer"
+      role="dialog"
+      aria-modal="true"
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="bg-white border border-neutral-200 rounded-2xl max-w-3xl w-full text-neutral-900 shadow-2xl relative my-6 flex flex-col max-h-[92vh] cursor-default"
+      >
         {/* Header */}
         <div className="p-5 border-b border-neutral-200 flex items-center justify-between bg-neutral-50 rounded-t-2xl">
           <div className="flex items-center gap-3">
@@ -135,7 +154,7 @@ export const UserDashboardModal: React.FC = () => {
                     </div>
 
                     <div className="text-right font-mono-hooden font-bold text-neutral-900 text-sm">
-                      {ord.totalTTC.toFixed(2)} € TTC
+                      {ord.totalTTC.toFixed(2)} €
                     </div>
                   </div>
 
@@ -187,7 +206,7 @@ export const UserDashboardModal: React.FC = () => {
                   <tr>
                     <th className="p-2.5">Facture</th>
                     <th className="p-2.5">Date</th>
-                    <th className="p-2.5">Total TTC</th>
+                    <th className="p-2.5">Montant</th>
                     <th className="p-2.5 text-right">Action</th>
                   </tr>
                 </thead>

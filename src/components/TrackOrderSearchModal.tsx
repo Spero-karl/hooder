@@ -11,6 +11,17 @@ export const TrackOrderSearchModal: React.FC<{ isOpen: boolean; onClose: () => v
   const [searchedOrder, setSearchedOrder] = useState<any | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
+  React.useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   const handleSearch = (e: React.FormEvent) => {
@@ -34,8 +45,16 @@ export const TrackOrderSearchModal: React.FC<{ isOpen: boolean; onClose: () => v
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs p-4 overflow-y-auto">
-      <div className="bg-white border border-neutral-200 rounded-2xl max-w-xl w-full p-6 text-neutral-900 shadow-2xl relative">
+    <div
+      onClick={onClose}
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 overflow-y-auto cursor-pointer"
+      role="dialog"
+      aria-modal="true"
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="bg-white border border-neutral-200 rounded-2xl max-w-xl w-full p-6 text-neutral-900 shadow-2xl relative cursor-default"
+      >
         <button
           onClick={onClose}
           className="absolute top-4 right-4 p-2 text-neutral-400 hover:text-neutral-800 rounded-lg hover:bg-neutral-100 transition-colors cursor-pointer"
@@ -93,7 +112,7 @@ export const TrackOrderSearchModal: React.FC<{ isOpen: boolean; onClose: () => v
 
               <div className="text-right">
                 <div className="text-sm font-bold font-mono-hooden text-neutral-900">
-                  {searchedOrder.totalTTC.toFixed(2)} € TTC
+                  {searchedOrder.totalTTC.toFixed(2)} €
                 </div>
                 <span className="text-[10px] font-mono-hooden bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded">
                   Payé

@@ -93,16 +93,10 @@ export const Header: React.FC<{
                 Livraison & Dépose
               </a>
               <a
-                href="#engagements"
-                className="hover:text-amber-800 transition-colors whitespace-nowrap shrink-0 hover:underline underline-offset-8"
-              >
-                Certifications NF / PEFC
-              </a>
-              <a
                 href="#faq"
                 className="hover:text-amber-800 transition-colors whitespace-nowrap shrink-0 hover:underline underline-offset-8"
               >
-                FAQ Conseils
+                Questions Fréquentes
               </a>
             </nav>
 

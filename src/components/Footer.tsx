@@ -1,6 +1,6 @@
 import React from 'react';
 import { HOODEN_COMPANY } from '../data/mockData';
-import { Flame, MapPin, Truck, Phone, Mail, ShieldCheck } from 'lucide-react';
+import { MapPin, Truck, Phone, Mail } from 'lucide-react';
 
 export const Footer: React.FC<{ onNavigate: (section: string) => void }> = () => {
   return (
@@ -18,12 +18,11 @@ export const Footer: React.FC<{ onNavigate: (section: string) => void }> = () =>
               </span>
             </div>
             <p className="text-xs text-neutral-500 leading-relaxed">
-              Exploitation, séchage sous étuve (&lt; 18% H₂O) et distribution de bois de chauffage haute performance en Île-de-France et France métropolitaine.
+              Exploitation, séchage sous étuve (&lt; 18% H₂O) et distribution de bois de chauffage haute performance.
             </p>
             <div className="text-[11px] text-neutral-400 font-mono-hooden space-y-0.5">
               <div>SIRET : {HOODEN_COMPANY.siret} · Code NAF 0220Z</div>
               <div>R.C.S. Paris B {HOODEN_COMPANY.siren}</div>
-              <div>TVA : {HOODEN_COMPANY.tvaIntracom}</div>
             </div>
           </div>
 
@@ -69,14 +68,11 @@ export const Footer: React.FC<{ onNavigate: (section: string) => void }> = () =>
             <div className="space-y-2 text-xs text-neutral-600">
               <div className="flex items-start gap-2">
                 <Truck className="w-4 h-4 text-amber-800 shrink-0 mt-0.5" />
-                <span>Plateforme logistique principale : Port autonome de Gennevilliers (92230)</span>
+                <span>Plateforme logistique principale : Port de Gennevilliers (92230)</span>
               </div>
               <div className="flex items-start gap-2">
                 <MapPin className="w-4 h-4 text-amber-800 shrink-0 mt-0.5" />
-                <span>Dépose à l’abri ou garage avec chariot élévateur tout-terrain</span>
-              </div>
-              <div className="text-[11px] text-emerald-800 font-mono-hooden font-medium pt-1">
-                ✓ Traçabilité 100% forêts françaises PEFC
+                <span>Dépose dans votre allée, cour ou garage</span>
               </div>
             </div>
           </div>
@@ -98,9 +94,6 @@ export const Footer: React.FC<{ onNavigate: (section: string) => void }> = () =>
                 <Mail className="w-4 h-4 text-amber-800" />
                 <span>{HOODEN_COMPANY.email}</span>
               </div>
-              <div className="pt-2 text-[11px] text-neutral-500 font-sans">
-                Facturation avec TVA légale à 10% (Art. 278-0 bis du Code Général des Impôts).
-              </div>
             </div>
           </div>
         </div>
@@ -110,7 +103,7 @@ export const Footer: React.FC<{ onNavigate: (section: string) => void }> = () =>
           <div className="flex items-center gap-4">
             <span>Bois sec &lt; 18%</span>
             <span aria-hidden="true">·</span>
-            <span>TVA 10% incluse</span>
+            <span>Tarifs directs</span>
             <span aria-hidden="true">·</span>
             <span>Livraison directe à domicile</span>
           </div>

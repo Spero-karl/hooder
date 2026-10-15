@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Truck, CheckCircle2, Star, MapPin } from 'lucide-react';
+import truckTipperImg from '../assets/images/firewood_truck_tipper_1791979209811.jpg';
 
 export const TrustAndLogistics: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'logistique' | 'avis'>('logistique');
@@ -23,7 +24,7 @@ export const TrustAndLogistics: React.FC = () => {
       rating: 5,
       productOrdered: 'Palette 2 stères Charme 25 cm',
       comment:
-        'Parfait pour mon poêle. Le bois brûle longtemps avec une belle braise. Facture reçue immédiatement avec la TVA à 10%. Très sérieux.',
+        'Parfait pour mon poêle. Le bois brûle longtemps avec une belle braise. Facture reçue immédiatement après la commande. Très sérieux.',
     },
     {
       id: 3,
@@ -113,7 +114,7 @@ export const TrustAndLogistics: React.FC = () => {
               {/* Delivery Photo */}
               <div className="lg:col-span-5 rounded-2xl overflow-hidden border border-neutral-200 bg-neutral-900 relative shadow-md">
                 <img
-                  src="/src/assets/images/firewood_truck_tipper_1791979209811.jpg"
+                  src={truckTipperImg}
                   alt="Camion de livraison de bois de chauffage"
                   referrerPolicy="no-referrer"
                   className="w-full h-64 object-cover"
