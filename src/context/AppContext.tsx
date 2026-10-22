@@ -43,6 +43,15 @@ interface AppContextType {
   // User Authentication
   user: UserProfile | null;
   setUser: React.Dispatch<React.SetStateAction<UserProfile | null>>;
+  loginUser: (email: string, password?: string) => { success: boolean; error?: string };
+  registerUser: (data: {
+    fullName: string;
+    email: string;
+    phone: string;
+    password?: string;
+    isPro?: boolean;
+    companyName?: string;
+  }) => { success: boolean; error?: string };
   loginDemoUser: (asPro?: boolean) => void;
   logoutUser: () => void;
   
@@ -59,13 +68,52 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [products] = useState<Product[]>(PRODUCTS);
   const [cart, setCart] = useState<CartItem[]>(() => {
-    // Initial friendly pre-fill so user can test checkout & invoice instantly
-    return [
-      { product: PRODUCTS[0], quantity: 1 }
-    ];
+    try {
+      const stored = localStorage.getItem('hooden_cart');
+      return stored ? JSON.parse(stored) : [];
+    } catch {
+      return [];
+    }
   });
-  const [orders, setOrders] = useState<Order[]>(INITIAL_ORDERS);
-  const [user, setUser] = useState<UserProfile | null>(INITIAL_USER);
+  const [orders, setOrders] = useState<Order[]>(() => {
+    try {
+      const stored = localStorage.getItem('hooden_orders');
+      return stored ? JSON.parse(stored) : [];
+    } catch {
+      return [];
+    }
+  });
+  const [user, setUser] = useState<UserProfile | null>(() => {
+    try {
+      const stored = localStorage.getItem('hooden_active_user');
+      return stored ? JSON.parse(stored) : null;
+    } catch {
+      return null;
+    }
+  });
+
+  // Local storage synchronization
+  useEffect(() => {
+    try {
+      localStorage.setItem('hooden_cart', JSON.stringify(cart));
+    } catch {}
+  }, [cart]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('hooden_orders', JSON.stringify(orders));
+    } catch {}
+  }, [orders]);
+
+  useEffect(() => {
+    try {
+      if (user) {
+        localStorage.setItem('hooden_active_user', JSON.stringify(user));
+      } else {
+        localStorage.removeItem('hooden_active_user');
+      }
+    } catch {}
+  }, [user]);
   
   // UI States
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -157,41 +205,101 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const cartTotalWeightKg = cart.reduce((acc, item) => acc + item.product.weightKg * item.quantity, 0);
   const cartSubtotalTTC = cart.reduce((acc, item) => acc + item.product.priceTTC * item.quantity, 0);
 
-  const loginDemoUser = (asPro = false) => {
-    if (asPro) {
-      setUser({
-        id: 'usr-pro-idf',
-        fullName: 'Boulangerie Tradition & Feu de Bois SAS',
-        email: 'direction@feudebois-paris.fr',
-        phone: '01 43 28 90 12',
-        isPro: true,
-        siret: '849 203 118 00024',
-        tvaNumber: 'FR 22 849203118',
-        savedAddress: {
-          fullName: 'M. Laurent Mercier (Directeur d\'exploitation)',
-          companyName: 'Fournil des Batignolles',
-          email: 'direction@feudebois-paris.fr',
-          phone: '01 43 28 90 12',
-          address: '77 Rue Legendre',
-          postalCode: '75017',
-          city: 'Paris',
-          accessConstraints: {
-            hasNarrowStreet: true,
-            hasGravelOrGrass: false,
-            hasGateOverTwoMeters: false,
-            hasSteps: false,
-            weightRestrictionUnder35T: false,
-            notes: 'Livraison cour arrière du fournil - Créneau impératif avant 10h'
-          }
-        },
-        loyaltyPoints: 1250
-      });
-      showToast('Connecté au compte Professionnel (Fournil des Batignolles)');
-    } else {
-      setUser(INITIAL_USER);
-      showToast('Connecté au compte Karl Freaton (Paris 16e)');
+  const loginUser = (email: string, password?: string): { success: boolean; error?: string } => {
+    const cleanEmail = email.trim().toLowerCase();
+    if (!cleanEmail) {
+      return { success: false, error: 'Veuillez saisir votre adresse e-mail.' };
     }
+
+    let usersList: any[] = [];
+    try {
+      const stored = localStorage.getItem('hooden_registered_users');
+      if (stored) usersList = JSON.parse(stored);
+    } catch {}
+
+    const existing = usersList.find((u) => u.email.toLowerCase() === cleanEmail);
+    if (existing) {
+      if (password && existing.password && existing.password !== password) {
+        return { success: false, error: 'Mot de passe incorrect.' };
+      }
+      setUser(existing);
+      showToast(`Bienvenue, ${existing.fullName.split(' ')[0]} !`);
+      setIsAuthOpen(false);
+      return { success: true };
+    }
+
+    // Direct registration on first login if not registered
+    const inferredName = cleanEmail
+      .split('@')[0]
+      .replace(/[._-]/g, ' ')
+      .replace(/\b\w/g, (c) => c.toUpperCase());
+
+    const newUser: UserProfile = {
+      id: `usr-${Date.now().toString(36)}`,
+      fullName: inferredName || 'Client Hooden',
+      email: cleanEmail,
+      phone: '',
+      isPro: cleanEmail.includes('pro') || cleanEmail.includes('sas') || cleanEmail.includes('sarl'),
+      loyaltyPoints: 50,
+    };
+
+    usersList.push({ ...newUser, password });
+    try {
+      localStorage.setItem('hooden_registered_users', JSON.stringify(usersList));
+    } catch {}
+
+    setUser(newUser);
+    showToast(`Bienvenue, ${newUser.fullName.split(' ')[0]} !`);
     setIsAuthOpen(false);
+    return { success: true };
+  };
+
+  const registerUser = (data: {
+    fullName: string;
+    email: string;
+    phone: string;
+    password?: string;
+    isPro?: boolean;
+    companyName?: string;
+  }): { success: boolean; error?: string } => {
+    const cleanEmail = data.email.trim().toLowerCase();
+    if (!cleanEmail || !data.fullName.trim()) {
+      return { success: false, error: 'Veuillez renseigner votre nom et une adresse e-mail valide.' };
+    }
+
+    let usersList: any[] = [];
+    try {
+      const stored = localStorage.getItem('hooden_registered_users');
+      if (stored) usersList = JSON.parse(stored);
+    } catch {}
+
+    const existing = usersList.find((u) => u.email.toLowerCase() === cleanEmail);
+    if (existing) {
+      return { success: false, error: 'Un compte existe déjà avec cette adresse e-mail. Veuillez vous connecter.' };
+    }
+
+    const newUser: UserProfile = {
+      id: `usr-${Date.now().toString(36)}`,
+      fullName: data.fullName.trim(),
+      email: cleanEmail,
+      phone: data.phone.trim(),
+      isPro: !!data.isPro,
+      loyaltyPoints: 100,
+    };
+
+    usersList.push({ ...newUser, password: data.password });
+    try {
+      localStorage.setItem('hooden_registered_users', JSON.stringify(usersList));
+    } catch {}
+
+    setUser(newUser);
+    showToast('Votre compte client a été créé avec succès. Bienvenue chez Hooden !');
+    setIsAuthOpen(false);
+    return { success: true };
+  };
+
+  const loginDemoUser = (asPro = false) => {
+    loginUser(asPro ? 'professionnel@bois-energie.fr' : 'client@hooden.fr');
   };
 
   const logoutUser = () => {
@@ -261,6 +369,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
     setOrders((prev) => [newOrder, ...prev]);
     clearCart();
+
+    // If a user is logged in, associate this address to their profile
+    if (user && !user.savedAddress) {
+      setUser((u) => (u ? { ...u, savedAddress: customer } : u));
+    }
+
     return newOrder;
   };
 
@@ -295,6 +409,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         setActiveTrackingOrder,
         user,
         setUser,
+        loginUser,
+        registerUser,
         loginDemoUser,
         logoutUser,
         notification,

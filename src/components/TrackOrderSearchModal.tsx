@@ -178,41 +178,43 @@ export const TrackOrderSearchModal: React.FC<{ isOpen: boolean; onClose: () => v
           </div>
         )}
 
-        {/* Existing / Sample Orders Quick Access */}
-        <div className="mt-5 pt-4 border-t border-neutral-200">
-          <div className="text-[11px] font-mono-hooden text-neutral-500 uppercase tracking-wider mb-2">
-            Vos commandes récentes :
+        {/* Recent orders quick list if any orders exist */}
+        {orders.length > 0 && (
+          <div className="mt-5 pt-4 border-t border-neutral-200">
+            <div className="text-[11px] font-mono-hooden text-neutral-500 uppercase tracking-wider mb-2">
+              Vos commandes récentes :
+            </div>
+            <div className="space-y-1.5">
+              {orders.map((ord) => (
+                <button
+                  key={ord.id}
+                  onClick={() => handleSelectOrder(ord)}
+                  className="w-full p-2.5 rounded-xl bg-neutral-50 hover:bg-neutral-100 border border-neutral-200 text-left text-xs flex items-center justify-between transition-colors cursor-pointer group"
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="font-mono-hooden font-bold text-neutral-900">
+                      Commande n° {ord.id.replace(/^HD-/, '')}
+                    </span>
+                    <span className="text-neutral-500 text-[11px]">
+                      · {ord.customer.city}
+                    </span>
+                    <span className={`text-[10px] font-mono-hooden px-1.5 py-0.2 rounded ${
+                      ord.status === 'livree'
+                        ? 'bg-emerald-100 text-emerald-800'
+                        : 'bg-amber-100 text-amber-900 font-semibold'
+                    }`}>
+                      {ord.status === 'livree' ? 'Livrée' : 'En acheminement'}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2 text-neutral-400 group-hover:text-amber-800 transition-colors">
+                    <span className="font-mono-hooden font-bold text-neutral-900">{ord.totalTTC.toFixed(2)} €</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </div>
+                </button>
+              ))}
+            </div>
           </div>
-          <div className="space-y-1.5">
-            {orders.map((ord) => (
-              <button
-                key={ord.id}
-                onClick={() => handleSelectOrder(ord)}
-                className="w-full p-2.5 rounded-xl bg-neutral-50 hover:bg-neutral-100 border border-neutral-200 text-left text-xs flex items-center justify-between transition-colors cursor-pointer group"
-              >
-                <div className="flex items-center gap-2">
-                  <span className="font-mono-hooden font-bold text-neutral-900">
-                    Commande n° {ord.id.replace(/^HD-/, '')}
-                  </span>
-                  <span className="text-neutral-500 text-[11px]">
-                    · {ord.customer.city}
-                  </span>
-                  <span className={`text-[10px] font-mono-hooden px-1.5 py-0.2 rounded ${
-                    ord.status === 'livree'
-                      ? 'bg-emerald-100 text-emerald-800'
-                      : 'bg-amber-100 text-amber-900 font-semibold'
-                  }`}>
-                    {ord.status === 'livree' ? 'Livrée' : 'En acheminement'}
-                  </span>
-                </div>
-                <div className="flex items-center gap-2 text-neutral-400 group-hover:text-amber-800 transition-colors">
-                  <span className="font-mono-hooden font-bold text-neutral-900">{ord.totalTTC.toFixed(2)} €</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </div>
-              </button>
-            ))}
-          </div>
-        </div>
+        )}
       </div>
     </div>
   );

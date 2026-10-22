@@ -18,23 +18,35 @@ export const CheckoutModal: React.FC = () => {
   } = useApp();
 
   // Address fields
-  const [fullName, setFullName] = useState(user?.fullName || 'Karl Freaton');
-  const [phone, setPhone] = useState(user?.phone || '06 12 45 78 90');
-  const [email, setEmail] = useState(user?.email || 'karlfreaton@gmail.com');
-  const [address, setAddress] = useState(user?.savedAddress?.address || '42 Avenue Victor Hugo');
-  const [postalCode, setPostalCode] = useState(user?.savedAddress?.postalCode || '75116');
-  const [city, setCity] = useState(user?.savedAddress?.city || 'Paris');
+  const [fullName, setFullName] = useState(user?.fullName || '');
+  const [phone, setPhone] = useState(user?.phone || '');
+  const [email, setEmail] = useState(user?.email || '');
+  const [address, setAddress] = useState(user?.savedAddress?.address || '');
+  const [postalCode, setPostalCode] = useState(user?.savedAddress?.postalCode || '');
+  const [city, setCity] = useState(user?.savedAddress?.city || '');
 
   // Delivery Date
   const [selectedDate, setSelectedDate] = useState<string>(UPCOMING_DELIVERY_DATES[0].fullDate);
 
   // Payment
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('card');
-  const [cardNumber, setCardNumber] = useState('4532 •••• •••• 8912');
-  const [cardExpiry, setCardExpiry] = useState('08/29');
-  const [cardCvc, setCardCvc] = useState('742');
+  const [cardNumber, setCardNumber] = useState('');
+  const [cardExpiry, setCardExpiry] = useState('');
+  const [cardCvc, setCardCvc] = useState('');
   const [transcashCode, setTranscashCode] = useState('');
   const [pcsCode, setPcsCode] = useState('');
+
+  // Synchronize fields if user profile changes
+  useEffect(() => {
+    if (user) {
+      if (user.fullName) setFullName(user.fullName);
+      if (user.phone) setPhone(user.phone);
+      if (user.email) setEmail(user.email);
+      if (user.savedAddress?.address) setAddress(user.savedAddress.address);
+      if (user.savedAddress?.postalCode) setPostalCode(user.savedAddress.postalCode);
+      if (user.savedAddress?.city) setCity(user.savedAddress.city);
+    }
+  }, [user]);
 
   // Status
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -350,8 +362,10 @@ export const CheckoutModal: React.FC = () => {
                         <label className="text-[11px] text-neutral-500 block mb-1">Numéro de carte</label>
                         <input
                           type="text"
+                          required
                           value={cardNumber}
                           onChange={(e) => setCardNumber(e.target.value)}
+                          placeholder="•••• •••• •••• ••••"
                           className="w-full px-3 py-2 rounded-lg bg-white border border-neutral-300 font-mono-hooden text-xs"
                         />
                       </div>
@@ -360,8 +374,10 @@ export const CheckoutModal: React.FC = () => {
                           <label className="text-[11px] text-neutral-500 block mb-1">Expiration</label>
                           <input
                             type="text"
+                            required
                             value={cardExpiry}
                             onChange={(e) => setCardExpiry(e.target.value)}
+                            placeholder="MM/AA"
                             className="w-full px-3 py-2 rounded-lg bg-white border border-neutral-300 font-mono-hooden text-xs text-center"
                           />
                         </div>
@@ -369,8 +385,11 @@ export const CheckoutModal: React.FC = () => {
                           <label className="text-[11px] text-neutral-500 block mb-1">CVC</label>
                           <input
                             type="text"
+                            required
                             value={cardCvc}
                             onChange={(e) => setCardCvc(e.target.value)}
+                            placeholder="123"
+                            maxLength={4}
                             className="w-full px-3 py-2 rounded-lg bg-white border border-neutral-300 font-mono-hooden text-xs text-center"
                           />
                         </div>

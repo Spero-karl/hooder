@@ -33,96 +33,9 @@ export const HOODEN_COMPANY = {
   }
 };
 
-export const INITIAL_USER: UserProfile = {
-  id: 'usr-karl-paris',
-  fullName: 'Karl Freaton',
-  email: 'karlfreaton@gmail.com',
-  phone: '06 12 45 78 90',
-  isPro: false,
-  savedAddress: {
-    fullName: 'Karl Freaton',
-    email: 'karlfreaton@gmail.com',
-    phone: '06 12 45 78 90',
-    address: '42 Avenue Victor Hugo',
-    addressDetails: 'Portail noir, sonnerie interphone Freaton, accès cour gravillonnée',
-    postalCode: '75116',
-    city: 'Paris',
-    accessConstraints: {
-      hasNarrowStreet: false,
-      hasGravelOrGrass: true,
-      hasGateOverTwoMeters: false,
-      hasSteps: false,
-      weightRestrictionUnder35T: false,
-      notes: 'Déposer la palette au fond à droite sous le porche à l\'abri de la pluie'
-    }
-  },
-  loyaltyPoints: 340
-};
-
-export const INITIAL_ORDERS: Order[] = [
-  {
-    id: 'HD-4891',
-    orderDate: '2026-10-12',
-    status: 'en_livraison',
-    customer: INITIAL_USER.savedAddress!,
-    items: [
-      {
-        product: PRODUCTS[0], // Palette Chêne 33cm (2 stères - 140€ TTC)
-        quantity: 1
-      },
-      {
-        product: PRODUCTS[5], // Demi-palette Chêne 33cm (1 stère - 78€ TTC)
-        quantity: 1
-      }
-    ],
-    subtotalHT: 198.18,
-    tva10Amount: 19.82,
-    tva20Amount: 0.00,
-    totalHT: 198.18,
-    shippingFeeTTC: 0.00,
-    totalTTC: 218.00,
-    deliveryMethod: DELIVERY_OPTIONS[0],
-    deliverySlot: {
-      date: '2026-10-14',
-      timeWindow: '10h00 - 12h00'
-    },
-    paymentMethod: 'card',
-    paymentStatus: 'paye',
-    driverInfo: {
-      name: 'Jean-Marc Tardieu',
-      phone: '06 98 12 34 56',
-      truckType: 'Mercedes-Benz Actros 18T équipé chariot embarqué',
-      plateNumber: 'GF-482-TX',
-      etaMinutes: 24,
-      currentStep: 'Camion en approche (à 4,2 km de votre adresse - Porte Maillot)'
-    }
-  },
-  {
-    id: 'HD-2180',
-    orderDate: '2026-09-28',
-    status: 'livree',
-    customer: INITIAL_USER.savedAddress!,
-    items: [
-      {
-        product: PRODUCTS[1], // Pur Charme 25cm (2 stères - 148€ TTC)
-        quantity: 2
-      }
-    ],
-    subtotalHT: 269.09,
-    tva10Amount: 26.91,
-    tva20Amount: 0.00,
-    totalHT: 269.09,
-    shippingFeeTTC: 0.00,
-    totalTTC: 296.00,
-    deliveryMethod: DELIVERY_OPTIONS[0],
-    deliverySlot: {
-      date: '2026-09-30',
-      timeWindow: '14h00 - 16h00'
-    },
-    paymentMethod: 'card',
-    paymentStatus: 'paye'
-  }
-];
+// Clean initial state - No preloaded user or mock orders
+export const INITIAL_USER: UserProfile | null = null;
+export const INITIAL_ORDERS: Order[] = [];
 
 export const UPCOMING_DELIVERY_DATES = [
   { date: 'Demain (14 Octobre)', fullDate: '2026-10-14', slots: ['08h00 - 10h00', '10h00 - 12h00', '14h00 - 16h00', '16h00 - 18h00'] },
