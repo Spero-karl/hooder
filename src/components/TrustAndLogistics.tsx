@@ -119,10 +119,15 @@ export const TrustAndLogistics: React.FC = () => {
                   referrerPolicy="no-referrer"
                   className="w-full h-64 object-cover"
                 />
-                <div className="p-4 bg-neutral-950 text-white">
-                  <div className="text-xs font-bold font-serif-hooden">Livraison directe à domicile</div>
-                  <div className="text-[11px] text-neutral-400 mt-0.5">
-                    Chauffeur dédié · Appel téléphonique avant passage · Dépose soignée
+                <div className="p-4 bg-neutral-950 text-white flex items-center justify-between gap-3">
+                  <div>
+                    <div className="text-xs font-bold font-serif-hooden">Livraison directe à domicile</div>
+                    <div className="text-[11px] text-neutral-400 mt-0.5">
+                      Chauffeur dédié · Appel téléphonique avant passage · Dépose soignée
+                    </div>
+                  </div>
+                  <div className="text-[11px] font-mono-hooden text-amber-400 border border-amber-900/50 bg-amber-950/40 px-2.5 py-1 rounded-md shrink-0">
+                    Chariot embarqué
                   </div>
                 </div>
               </div>

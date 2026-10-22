@@ -2,7 +2,10 @@ import React from 'react';
 import { HOODEN_COMPANY } from '../data/mockData';
 import { MapPin, Truck, Phone, Mail } from 'lucide-react';
 
-export const Footer: React.FC<{ onNavigate: (section: string) => void }> = () => {
+export const Footer: React.FC<{
+  onNavigate: (section: string) => void;
+  onOpenOrderLookup?: () => void;
+}> = ({ onOpenOrderLookup }) => {
   return (
     <footer className="bg-white text-neutral-600 border-t border-neutral-200 text-xs mt-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -74,6 +77,17 @@ export const Footer: React.FC<{ onNavigate: (section: string) => void }> = () =>
                 <MapPin className="w-4 h-4 text-amber-800 shrink-0 mt-0.5" />
                 <span>Dépose dans votre allée, cour ou garage</span>
               </div>
+              {onOpenOrderLookup && (
+                <div className="pt-2">
+                  <button
+                    onClick={onOpenOrderLookup}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-neutral-100 hover:bg-neutral-200 text-neutral-800 font-medium text-[11px] transition-colors cursor-pointer"
+                  >
+                    <Truck className="w-3.5 h-3.5 text-amber-800" />
+                    <span>Suivre ma commande & Facture</span>
+                  </button>
+                </div>
+              )}
             </div>
           </div>
 

@@ -27,7 +27,7 @@ export const InvoiceModal: React.FC = () => {
       ? 'Carte bancaire'
       : order.paymentMethod === 'transcash'
       ? 'Transcash'
-      : 'PayPal';
+      : 'PCS';
 
   const handlePrint = () => {
     window.print();
@@ -71,7 +71,7 @@ export const InvoiceModal: React.FC = () => {
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(11);
       doc.setTextColor(...colDark);
-      doc.text(`FACTURE N° ${order.id}`, rightX, 23, { align: 'right' });
+      doc.text(`FACTURE N° ${order.id.replace(/^HD-/, '')}`, rightX, 23, { align: 'right' });
 
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(8);
@@ -260,7 +260,7 @@ export const InvoiceModal: React.FC = () => {
       });
 
       // Save PDF
-      doc.save(`Facture-HOODEN-${order.id}.pdf`);
+      doc.save(`Facture-HOODEN-${order.id.replace(/^HD-/, '')}.pdf`);
       setDownloadSuccess(true);
       setTimeout(() => setDownloadSuccess(false), 2500);
     } catch (err) {
@@ -289,7 +289,7 @@ export const InvoiceModal: React.FC = () => {
               Facture acquittée
             </span>
             <span className="text-xs font-mono-hooden text-neutral-500 font-medium">
-              #{order.id}
+              n° {order.id.replace(/^HD-/, '')}
             </span>
           </div>
 
@@ -344,7 +344,7 @@ export const InvoiceModal: React.FC = () => {
 
             <div className="text-right space-y-0.5">
               <div className="text-xs font-bold font-mono-hooden text-neutral-950">
-                FACTURE N° {order.id}
+                FACTURE N° {order.id.replace(/^HD-/, '')}
               </div>
               <div className="text-[11px] text-neutral-500 font-mono-hooden">
                 Date : {order.orderDate}

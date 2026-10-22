@@ -210,7 +210,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     deliverySlot: DeliverySlot;
     paymentMethod: PaymentMethod;
   }): Order => {
-    const orderNumber = `HOOD-2026-${Math.floor(1000 + Math.random() * 9000)}`;
+    const orderNumber = `HD-${Math.floor(1000 + Math.random() * 9000)}`;
     const todayStr = new Date().toISOString().split('T')[0];
 
     // Compute VAT breakdown

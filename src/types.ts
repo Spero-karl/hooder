@@ -97,10 +97,10 @@ export interface DeliverySlot {
   timeWindow: string; // e.g. "08h00 - 10h00"
 }
 
-export type PaymentMethod = 'card' | 'transcash' | 'paypal';
+export type PaymentMethod = 'card' | 'transcash' | 'pcs';
 
 export interface Order {
-  id: string; // e.g. "HOOD-2026-8492"
+  id: string; // e.g. "HD-4891"
   orderDate: string;
   status: 'confirmee' | 'en_preparation' | 'en_livraison' | 'livree';
   customer: DeliveryAddress;

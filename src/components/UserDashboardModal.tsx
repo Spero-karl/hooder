@@ -136,7 +136,7 @@ export const UserDashboardModal: React.FC = () => {
                     <div>
                       <div className="flex items-center gap-2">
                         <span className="font-mono-hooden font-bold text-neutral-900 text-sm">
-                          Commande #{ord.id}
+                          Commande n° {ord.id.replace(/^HD-/, '')}
                         </span>
                         {ord.status === 'en_livraison' ? (
                           <span className="text-[10px] font-mono-hooden bg-amber-100 text-amber-900 border border-amber-300 px-2 py-0.5 rounded font-bold">
@@ -213,7 +213,7 @@ export const UserDashboardModal: React.FC = () => {
                 <tbody className="divide-y divide-neutral-200 bg-white">
                   {orders.map((ord) => (
                     <tr key={ord.id} className="hover:bg-neutral-50">
-                      <td className="p-2.5 font-bold text-neutral-900">#{ord.id}</td>
+                      <td className="p-2.5 font-bold text-neutral-900">n° {ord.id.replace(/^HD-/, '')}</td>
                       <td className="p-2.5 text-neutral-600">{ord.orderDate}</td>
                       <td className="p-2.5 font-bold text-neutral-900">{ord.totalTTC.toFixed(2)} €</td>
                       <td className="p-2.5 text-right">

@@ -61,7 +61,7 @@ export const INITIAL_USER: UserProfile = {
 
 export const INITIAL_ORDERS: Order[] = [
   {
-    id: 'HOOD-2026-4891',
+    id: 'HD-4891',
     orderDate: '2026-10-12',
     status: 'en_livraison',
     customer: INITIAL_USER.savedAddress!,
@@ -98,7 +98,7 @@ export const INITIAL_ORDERS: Order[] = [
     }
   },
   {
-    id: 'HOOD-2026-2180',
+    id: 'HD-2180',
     orderDate: '2026-09-28',
     status: 'livree',
     customer: INITIAL_USER.savedAddress!,

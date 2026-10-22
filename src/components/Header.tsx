@@ -1,9 +1,9 @@
 import React from 'react';
 import { useApp } from '../context/AppContext';
-import { ShoppingBag, User, Truck, Search, ShieldCheck } from 'lucide-react';
+import { ShoppingBag, User, Search, Phone, Truck } from 'lucide-react';
 
 export const Header: React.FC<{
-  onOpenOrderLookup: () => void;
+  onOpenOrderLookup?: () => void;
   searchQuery: string;
   setSearchQuery: (q: string) => void;
 }> = ({ onOpenOrderLookup, searchQuery, setSearchQuery }) => {
@@ -31,20 +31,24 @@ export const Header: React.FC<{
             <span className="text-neutral-400 hidden lg:inline">Tarif direct dépôt ~ 70 € / stère</span>
           </div>
 
-          <div className="flex items-center gap-4 text-[11px] sm:text-xs text-neutral-300 shrink-0">
-            <button
-              onClick={onOpenOrderLookup}
-              className="hover:text-amber-400 flex items-center gap-1.5 transition-colors cursor-pointer font-medium"
-            >
-              <Truck className="w-3.5 h-3.5 text-amber-400" />
-              <span>Suivre ma commande & Facture</span>
-            </button>
-            <span aria-hidden="true" className="text-neutral-700">·</span>
+          <div className="flex items-center gap-3 text-[11px] sm:text-xs text-neutral-300 shrink-0">
+            {onOpenOrderLookup && (
+              <button
+                onClick={onOpenOrderLookup}
+                className="hover:text-white flex items-center gap-1.5 font-mono-hooden text-neutral-300 transition-colors cursor-pointer"
+                title="Suivre l'acheminement de votre commande"
+              >
+                <Truck className="w-3 h-3 text-amber-400" />
+                <span>Suivre ma commande</span>
+              </button>
+            )}
+            <span aria-hidden="true" className="text-neutral-700 hidden sm:inline">·</span>
             <a
               href="tel:0189714200"
-              className="hover:text-white flex items-center gap-1 font-mono-hooden text-neutral-300"
+              className="hover:text-white flex items-center gap-1.5 font-mono-hooden text-neutral-300 transition-colors"
               title="Service commandes & logistique"
             >
+              <Phone className="w-3 h-3 text-amber-400" />
               <span>01 89 71 42 00</span>
             </a>
           </div>
@@ -122,6 +126,18 @@ export const Header: React.FC<{
                   </button>
                 )}
               </div>
+
+              {/* Tracking Order Trigger */}
+              {onOpenOrderLookup && (
+                <button
+                  onClick={onOpenOrderLookup}
+                  className="hidden md:flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-lg border border-neutral-200 bg-white hover:bg-neutral-50 text-neutral-700 hover:text-neutral-900 transition-colors cursor-pointer whitespace-nowrap shrink-0"
+                  title="Suivre l'acheminement de votre livraison"
+                >
+                  <Truck className="w-3.5 h-3.5 text-neutral-500" />
+                  <span>Suivi</span>
+                </button>
+              )}
 
               {/* Account Profile Trigger */}
               {user ? (

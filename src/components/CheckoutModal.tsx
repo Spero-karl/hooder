@@ -34,6 +34,7 @@ export const CheckoutModal: React.FC = () => {
   const [cardExpiry, setCardExpiry] = useState('08/29');
   const [cardCvc, setCardCvc] = useState('742');
   const [transcashCode, setTranscashCode] = useState('');
+  const [pcsCode, setPcsCode] = useState('');
 
   // Status
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -135,7 +136,7 @@ export const CheckoutModal: React.FC = () => {
                 Commande validée
               </h3>
               <p className="text-xs font-mono-hooden text-neutral-500 mt-1">
-                Numéro : <span className="text-neutral-900 font-semibold">{completedOrder.id}</span>
+                Numéro : <span className="text-neutral-900 font-semibold">Commande n° {completedOrder.id.replace(/^HD-/, '')}</span>
               </p>
             </div>
 
@@ -157,7 +158,7 @@ export const CheckoutModal: React.FC = () => {
                     ? 'Carte bancaire'
                     : completedOrder.paymentMethod === 'transcash'
                     ? 'Transcash'
-                    : 'PayPal'}
+                    : 'PCS'}
                 </span>
               </div>
               <div className="flex justify-between pt-2 border-t border-neutral-200 text-sm font-bold">
@@ -330,15 +331,15 @@ export const CheckoutModal: React.FC = () => {
 
                     <button
                       type="button"
-                      onClick={() => setPaymentMethod('paypal')}
+                      onClick={() => setPaymentMethod('pcs')}
                       className={`p-2.5 rounded-lg border text-xs font-medium text-center transition-all cursor-pointer ${
-                        paymentMethod === 'paypal'
+                        paymentMethod === 'pcs'
                           ? 'border-neutral-950 bg-neutral-950 text-white'
                           : 'border-neutral-200 bg-neutral-50 text-neutral-700 hover:bg-neutral-100'
                       }`}
                     >
-                      <span className="block text-xs font-serif-hooden italic font-bold mb-1">P</span>
-                      <span>PayPal</span>
+                      <span className="block text-xs font-bold font-mono-hooden mb-1">PCS</span>
+                      <span>PCS</span>
                     </button>
                   </div>
 
@@ -396,14 +397,22 @@ export const CheckoutModal: React.FC = () => {
                     </div>
                   )}
 
-                  {paymentMethod === 'paypal' && (
-                    <div className="p-4 rounded-xl bg-neutral-50 border border-neutral-200 text-center text-xs space-y-2">
-                      <p className="text-neutral-600">
-                        Validation sécurisée via votre compte PayPal.
+                  {paymentMethod === 'pcs' && (
+                    <div className="p-3.5 rounded-xl bg-neutral-50 border border-neutral-200 text-xs space-y-2">
+                      <label className="text-[11px] text-neutral-600 block">
+                        Code coupon / recharge PCS (10 chiffres)
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={pcsCode}
+                        onChange={(e) => setPcsCode(e.target.value)}
+                        placeholder="Ex: 9482 1045 77"
+                        className="w-full px-3 py-2 rounded-lg bg-white border border-neutral-300 font-mono-hooden text-xs tracking-wider"
+                      />
+                      <p className="text-[10px] text-neutral-400">
+                        Code figurant sur votre ticket ou recharge PCS Mastercard.
                       </p>
-                      <div className="inline-block px-4 py-1.5 rounded-lg bg-[#0070ba] text-white font-semibold text-xs">
-                        PayPal
-                      </div>
                     </div>
                   )}
 

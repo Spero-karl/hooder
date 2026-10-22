@@ -1,24 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useApp } from '../context/AppContext';
 import {
   Truck,
   CheckCircle2,
   Clock,
-  Package,
   MapPin,
   FileText,
   X,
-  RefreshCw,
   Phone,
   ShieldCheck,
-  Navigation,
+  Package,
+  Calendar,
 } from 'lucide-react';
 
 export const TrackingModal: React.FC = () => {
   const { activeTrackingOrder, setActiveTrackingOrder, setActiveInvoiceOrder } = useApp();
-  const [isRefreshing, setIsRefreshing] = useState(false);
-  const [lastUpdated, setLastUpdated] = useState('À l\'instant');
-  const [activeStepTab, setActiveStepTab] = useState<number | null>(null);
 
   // Close on Escape key
   useEffect(() => {
@@ -34,7 +30,9 @@ export const TrackingModal: React.FC = () => {
   if (!activeTrackingOrder) return null;
   const order = activeTrackingOrder;
 
-  // Determine current active step index (0, 1, 2, 3)
+  const orderNum = order.id.replace(/^HD-/, '');
+
+  // Step indices
   const getStepIndex = (status: string) => {
     switch (status) {
       case 'confirmee':
@@ -46,60 +44,45 @@ export const TrackingModal: React.FC = () => {
       case 'livree':
         return 3;
       default:
-        return 2; // default to active delivery for visual dynamism
+        return 2;
     }
   };
 
-  const currentStepIdx = getStepIndex(order.status);
-  const displayedStep = activeStepTab !== null ? activeStepTab : currentStepIdx;
+  const currentStep = getStepIndex(order.status);
 
   const steps = [
     {
       title: 'Commande validée',
-      desc: 'Enregistrée en scierie & stock de stères réservé',
-      time: order.orderDate,
-      icon: CheckCircle2,
-      details: 'Paiement confirmé. Préparation de vos palettes en entrepôt régional.',
+      subtitle: 'Enregistrée en scierie',
+      date: order.orderDate,
+      desc: 'Paiement confirmé et stères réservés sous abri ventilé.',
     },
     {
-      title: 'Contrôle & Séchage certifié',
-      desc: 'Taux d\'humidité contrôlé < 20% & cerclage de protection',
-      time: 'Jour J-1',
-      icon: ShieldCheck,
-      details: 'Contrôle hygrométrique rigoureux par nos opérateurs forestiers. Emballage soigné pour le transport.',
+      title: 'Préparation & Contrôle',
+      subtitle: 'Taux humidité < 18%',
+      date: 'Veille de livraison',
+      desc: 'Contrôle hygrométrique au cœur du bois certifié sec. Palettes filmées et cerclées.',
     },
     {
       title: 'En cours d\'acheminement',
-      desc: 'Camion porteur 19T avec chariot tout-terrain embarqué',
-      time: `${order.deliverySlot?.date || 'Jour J'} · ${order.deliverySlot?.timeWindow || 'Matinée'}`,
-      icon: Truck,
-      details: 'Le chauffeur-livreur est en tournée. Votre palette sera dépose directe au plus près de votre zone de stockage sans effort.',
+      subtitle: 'Porteur 19T & Chariot',
+      date: order.deliverySlot?.date || 'Jour de livraison',
+      desc: 'Pris en charge par notre transporteur. Chauffeur en approche avec chariot tout-terrain.',
     },
     {
-      title: 'Livrée & Réceptionnée',
-      desc: 'Dépose au sol terminée avec le chariot embarqué',
-      time: order.status === 'livree' ? 'Effectuée' : 'Prévue sous peu',
-      icon: MapPin,
-      details: 'Dépose validée avec accusé de réception numérique sans encombre.',
+      title: 'Dépose sous abri',
+      subtitle: 'Réception terminée',
+      date: order.status === 'livree' ? 'Effectuée' : 'À réception',
+      desc: 'Dépose au sol exacte dans votre cour, garage ou allée sans manutention de votre part.',
     },
   ];
-
-  const handleRefresh = () => {
-    setIsRefreshing(true);
-    setTimeout(() => {
-      setIsRefreshing(false);
-      const now = new Date();
-      setLastUpdated(`${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`);
-    }, 600);
-  };
 
   const driver = order.driverInfo || {
     name: 'Jean-Marc Tardieu',
     phone: '06 98 12 34 56',
-    truckType: 'Mercedes-Benz Actros 18T · Chariot tout-terrain embarqué Moffett M4',
+    truckType: 'Porteur Mercedes Actros 18T avec chariot tout-terrain embarqué',
     plateNumber: 'GF-482-TX',
-    etaMinutes: 20,
-    currentStep: 'Camion en approche de votre secteur pour dépose directe',
+    currentStep: 'Tournée en cours',
   };
 
   return (
@@ -111,216 +94,309 @@ export const TrackingModal: React.FC = () => {
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="bg-white border border-neutral-200/90 rounded-2xl max-w-lg w-full text-neutral-900 shadow-2xl relative my-auto overflow-hidden cursor-default transition-all"
+        className="bg-white border border-neutral-200/90 rounded-2xl max-w-2xl w-full text-neutral-900 shadow-2xl relative my-auto overflow-hidden cursor-default transition-all"
       >
-        {/* Dynamic Live Header */}
-        <div className="px-5 pt-4 pb-3 flex items-center justify-between border-b border-neutral-100 bg-neutral-50/70">
-          <div className="flex items-center gap-2">
-            <span className="relative flex h-2.5 w-2.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-600"></span>
-            </span>
-            <span className="text-xs font-bold text-neutral-900 uppercase font-mono-hooden">
-              Suivi en direct
-            </span>
-            <span className="text-[11px] font-mono-hooden text-neutral-500">
-              #{order.id}
-            </span>
+        {/* Top Header - Major site standard */}
+        <div className="px-5 py-4 border-b border-neutral-100 flex items-center justify-between bg-neutral-50/70">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center text-amber-900 shrink-0">
+              <Truck className="w-4 h-4" />
+            </div>
+            <div>
+              <div className="text-xs font-semibold uppercase tracking-wider text-neutral-500 font-mono-hooden">
+                Suivi d'expédition
+              </div>
+              <div className="text-sm font-bold font-serif-hooden text-neutral-900">
+                Commande n° {orderNum}
+              </div>
+            </div>
           </div>
 
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-2">
             <button
-              onClick={handleRefresh}
-              disabled={isRefreshing}
-              className="px-2 py-1 rounded-lg hover:bg-neutral-200/60 text-neutral-600 hover:text-neutral-900 text-[11px] font-medium flex items-center gap-1 transition-colors cursor-pointer"
-              title="Actualiser la position"
+              onClick={() => {
+                setActiveTrackingOrder(null);
+                setActiveInvoiceOrder(order);
+              }}
+              className="px-3 py-1.5 rounded-lg border border-neutral-200 hover:bg-neutral-100 text-neutral-700 text-xs font-medium flex items-center gap-1.5 transition-colors cursor-pointer"
+              title="Consulter la facture"
             >
-              <RefreshCw className={`w-3 h-3 ${isRefreshing ? 'animate-spin text-amber-800' : ''}`} />
-              <span className="hidden sm:inline">Actualisé ({lastUpdated})</span>
+              <FileText className="w-3.5 h-3.5 text-neutral-500" />
+              <span className="hidden sm:inline">Facture</span>
             </button>
 
             <button
               onClick={() => setActiveTrackingOrder(null)}
-              className="p-1.5 text-neutral-400 hover:text-neutral-900 hover:bg-neutral-200/70 rounded-lg transition-colors cursor-pointer"
+              className="p-1.5 text-neutral-400 hover:text-neutral-800 hover:bg-neutral-100 rounded-lg transition-colors cursor-pointer"
               aria-label="Fermer"
               title="Fermer"
             >
-              <X className="w-4 h-4" />
+              <X className="w-5 h-5" />
             </button>
           </div>
         </div>
 
-        <div className="p-5 sm:p-6 space-y-5">
-          {/* Dynamic Progress Bar */}
-          <div>
-            <div className="flex justify-between items-center text-xs mb-2">
-              <span className="font-semibold text-neutral-900">
-                {steps[currentStepIdx].title}
-              </span>
-              <span className="text-emerald-700 font-mono-hooden font-bold text-[11px]">
-                {currentStepIdx === 3 ? '100% · Terminé' : `${((currentStepIdx + 1) / 4) * 100}% de progression`}
-              </span>
+        <div className="p-5 sm:p-6 space-y-6 max-h-[82vh] overflow-y-auto">
+          {/* Status Hero Card */}
+          <div className="p-4 sm:p-5 rounded-xl bg-gradient-to-br from-neutral-900 to-neutral-800 text-white shadow-sm">
+            <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-neutral-700/80">
+              <div className="flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+                <span className="text-xs font-bold uppercase tracking-wider font-mono-hooden text-emerald-400">
+                  {order.status === 'livree'
+                    ? 'Commande livrée'
+                    : order.status === 'en_livraison'
+                    ? 'En cours de livraison'
+                    : 'En préparation'}
+                </span>
+              </div>
+              <div className="text-xs text-neutral-400 font-mono-hooden">
+                Réf : HD-{orderNum}
+              </div>
             </div>
 
-            <div className="w-full bg-neutral-100 h-2 rounded-full overflow-hidden">
-              <div
-                className="bg-gradient-to-r from-amber-700 to-emerald-600 h-full rounded-full transition-all duration-700 ease-out"
-                style={{ width: `${Math.max(25, ((currentStepIdx + 1) / 4) * 100)}%` }}
-              />
+            <div className="pt-3 grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <div className="text-[11px] text-neutral-400 uppercase font-mono-hooden flex items-center gap-1.5">
+                  <Calendar className="w-3.5 h-3.5 text-amber-400" />
+                  <span>Date de livraison prévue</span>
+                </div>
+                <div className="text-base sm:text-lg font-bold text-white mt-1 font-serif-hooden">
+                  {order.deliverySlot?.date || 'À déterminer'}
+                </div>
+                <div className="text-xs text-amber-300 font-mono-hooden mt-0.5">
+                  Créneau : {order.deliverySlot?.timeWindow || '08h00 - 12h00'}
+                </div>
+              </div>
+
+              <div className="sm:border-l sm:border-neutral-700/80 sm:pl-4">
+                <div className="text-[11px] text-neutral-400 uppercase font-mono-hooden flex items-center gap-1.5">
+                  <MapPin className="w-3.5 h-3.5 text-amber-400" />
+                  <span>Lieu de dépose</span>
+                </div>
+                <div className="text-xs font-semibold text-white mt-1 truncate">
+                  {order.customer.address}
+                </div>
+                <div className="text-xs text-neutral-300 font-mono-hooden">
+                  {order.customer.postalCode} {order.customer.city}
+                </div>
+                <div className="text-[11px] text-emerald-400 mt-1">
+                  Dépose au sol soignée par chariot embarqué
+                </div>
+              </div>
             </div>
           </div>
 
-          {/* Interactive Stepper / Milestones */}
+          {/* Stepper (Grand Site Standard) */}
           <div className="space-y-3">
-            {steps.map((st, idx) => {
-              const isPast = idx < currentStepIdx;
-              const isCurrent = idx === currentStepIdx;
-              const Icon = st.icon;
+            <h4 className="text-xs font-bold uppercase tracking-wider text-neutral-500 font-mono-hooden">
+              Progression de votre commande
+            </h4>
 
-              return (
-                <div
-                  key={idx}
-                  onClick={() => setActiveStepTab(idx === activeStepTab ? null : idx)}
-                  className={`p-3 rounded-xl border transition-all cursor-pointer ${
-                    isCurrent
-                      ? 'bg-amber-50/50 border-amber-300 ring-1 ring-amber-200/50 shadow-xs'
-                      : isPast
-                      ? 'bg-neutral-50/70 border-neutral-200/80'
-                      : 'bg-white border-neutral-100 opacity-60'
-                  }`}
-                >
-                  <div className="flex items-start gap-3">
+            <div className="relative">
+              {/* Stepper items */}
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+                {steps.map((st, idx) => {
+                  const isCompleted = idx < currentStep;
+                  const isCurrent = idx === currentStep;
+                  const isPending = idx > currentStep;
+
+                  return (
                     <div
-                      className={`p-1.5 rounded-lg shrink-0 mt-0.5 ${
+                      key={idx}
+                      className={`p-3 rounded-xl border text-left transition-all ${
                         isCurrent
-                          ? 'bg-amber-800 text-white shadow-xs'
-                          : isPast
-                          ? 'bg-emerald-100 text-emerald-800'
-                          : 'bg-neutral-100 text-neutral-400'
+                          ? 'border-amber-700 bg-amber-50/60 ring-1 ring-amber-300 shadow-xs'
+                          : isCompleted
+                          ? 'border-emerald-200 bg-emerald-50/30'
+                          : 'border-neutral-200 bg-neutral-50/50 opacity-60'
                       }`}
                     >
-                      <Icon className="w-3.5 h-3.5" />
-                    </div>
-
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between gap-2">
-                        <div className="text-xs font-semibold text-neutral-900">
-                          {st.title}
+                      <div className="flex items-center gap-2 mb-1.5">
+                        <div
+                          className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${
+                            isCompleted
+                              ? 'bg-emerald-600 text-white'
+                              : isCurrent
+                              ? 'bg-amber-800 text-white'
+                              : 'bg-neutral-200 text-neutral-600'
+                          }`}
+                        >
+                          {isCompleted ? '✓' : idx + 1}
                         </div>
-                        <div className="text-[10px] text-neutral-500 font-mono-hooden shrink-0">
-                          {st.time}
-                        </div>
+                        <span className="text-[10px] font-mono-hooden text-neutral-500 truncate">
+                          {st.date}
+                        </span>
                       </div>
-                      <div className="text-[11px] text-neutral-600 mt-0.5 leading-relaxed">
-                        {st.desc}
-                      </div>
 
-                      {/* Expandable dynamic step detail */}
-                      {(isCurrent || activeStepTab === idx) && (
-                        <div className="mt-2 pt-2 border-t border-neutral-200/60 text-[11px] text-neutral-700 bg-white/60 p-2 rounded-lg">
-                          {st.details}
-                        </div>
-                      )}
+                      <div className="text-xs font-bold text-neutral-900 leading-snug">
+                        {st.title}
+                      </div>
+                      <div className="text-[11px] text-neutral-600 mt-0.5 leading-tight">
+                        {st.subtitle}
+                      </div>
                     </div>
-                  </div>
-                </div>
-              );
-            })}
+                  );
+                })}
+              </div>
+            </div>
           </div>
 
-          {/* Live Driver & Logistics Card */}
-          {order.status !== 'livree' && (
-            <div className="p-3.5 rounded-xl bg-neutral-900 text-white space-y-2.5">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Navigation className="w-4 h-4 text-amber-400 shrink-0" />
-                  <span className="text-xs font-bold uppercase tracking-wider font-mono-hooden text-neutral-200">
-                    Logistique directe en approche
-                  </span>
+          {/* Chronological Event History */}
+          <div className="space-y-3">
+            <h4 className="text-xs font-bold uppercase tracking-wider text-neutral-500 font-mono-hooden">
+              Historique des événements
+            </h4>
+
+            <div className="rounded-xl border border-neutral-200 overflow-hidden divide-y divide-neutral-100 text-xs">
+              <div className="p-3 bg-neutral-50/70 flex items-start justify-between gap-3">
+                <div className="space-y-0.5">
+                  <div className="font-semibold text-neutral-900 flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
+                    <span>Camion en approche dans votre secteur</span>
+                  </div>
+                  <div className="text-neutral-500 text-[11px]">
+                    Le chauffeur actionnera le chariot tout-terrain pour accéder à votre zone de stockage.
+                  </div>
                 </div>
-                <span className="text-[10px] bg-amber-500/20 text-amber-300 font-mono-hooden px-2 py-0.5 rounded font-semibold border border-amber-500/30">
-                  ETA : ~{driver.etaMinutes} min
-                </span>
+                <div className="text-right text-[11px] font-mono-hooden text-neutral-500 shrink-0">
+                  {order.deliverySlot?.date || 'Aujourd\'hui'} · 08:45
+                </div>
               </div>
 
-              <div className="text-xs space-y-1">
-                <div className="flex justify-between items-center">
-                  <span className="text-neutral-400">Chauffeur :</span>
-                  <span className="font-semibold text-neutral-100">{driver.name}</span>
+              <div className="p-3 bg-white flex items-start justify-between gap-3">
+                <div className="space-y-0.5">
+                  <div className="font-semibold text-neutral-900">
+                    Départ en tournée de livraison
+                  </div>
+                  <div className="text-neutral-500 text-[11px]">
+                    Plateforme logistique régionale — Port de Gennevilliers (92230)
+                  </div>
                 </div>
-                <div className="flex justify-between items-center text-[11px]">
-                  <span className="text-neutral-400">Véhicule & Chariot :</span>
-                  <span className="text-neutral-300 font-mono-hooden">{driver.plateNumber}</span>
+                <div className="text-right text-[11px] font-mono-hooden text-neutral-500 shrink-0">
+                  {order.deliverySlot?.date || 'Aujourd\'hui'} · 07:15
                 </div>
-                <p className="text-[11px] text-neutral-300 pt-1 border-t border-neutral-800">
-                  {driver.currentStep}
-                </p>
               </div>
 
-              <div className="pt-2 flex items-center justify-between text-[11px] text-neutral-400">
-                <span className="flex items-center gap-1 text-emerald-400">
-                  <CheckCircle2 className="w-3.5 h-3.5" />
-                  Chariot embarqué opérationnel
-                </span>
+              <div className="p-3 bg-white flex items-start justify-between gap-3">
+                <div className="space-y-0.5">
+                  <div className="font-semibold text-neutral-900">
+                    Contrôle hygrométrique certifié (&lt; 18% H₂O) & Palettisation
+                  </div>
+                  <div className="text-neutral-500 text-[11px]">
+                    Étuve scierie Hooden — Taux mesuré : 16.4%. Cerclage haute résistance et filmage étanche.
+                  </div>
+                </div>
+                <div className="text-right text-[11px] font-mono-hooden text-neutral-500 shrink-0">
+                  Veille · 16:30
+                </div>
+              </div>
+
+              <div className="p-3 bg-white flex items-start justify-between gap-3">
+                <div className="space-y-0.5">
+                  <div className="font-semibold text-neutral-900">
+                    Commande validée & Réservation de vos stères
+                  </div>
+                  <div className="text-neutral-500 text-[11px]">
+                    Maison Forestière Hooden — Lot réservé sous abri sec.
+                  </div>
+                </div>
+                <div className="text-right text-[11px] font-mono-hooden text-neutral-500 shrink-0">
+                  {order.orderDate} · 14:10
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Delivery & Carrier Info */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Carrier Card */}
+            <div className="p-4 rounded-xl bg-neutral-50 border border-neutral-200 text-xs space-y-2">
+              <div className="font-bold text-neutral-900 font-mono-hooden uppercase text-[11px] flex items-center justify-between">
+                <span>Transporteur & Chauffeur</span>
+                <span className="text-emerald-700 font-semibold lowercase">dédié</span>
+              </div>
+              <div className="font-semibold text-neutral-900 text-sm">
+                {driver.name}
+              </div>
+              <div className="text-neutral-600 text-[11px] font-mono-hooden">
+                {driver.truckType}
+              </div>
+              <div className="pt-2 flex items-center justify-between">
+                <span className="text-[11px] text-neutral-500">Coordination accès :</span>
                 <a
                   href={`tel:${driver.phone}`}
-                  className="flex items-center gap-1 text-amber-300 hover:text-amber-200 font-medium"
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-neutral-900 hover:bg-neutral-800 text-white font-mono-hooden text-xs transition-colors cursor-pointer"
                 >
-                  <Phone className="w-3 h-3" />
-                  <span>Contacter chauffeur</span>
+                  <Phone className="w-3 h-3 text-amber-400" />
+                  <span>{driver.phone}</span>
                 </a>
               </div>
             </div>
-          )}
 
-          {/* Destination & Ordered items summary */}
-          <div className="p-3 rounded-xl bg-neutral-50 border border-neutral-100 space-y-2 text-xs">
-            <div className="flex items-start gap-2 text-neutral-700">
-              <MapPin className="w-4 h-4 text-neutral-400 shrink-0 mt-0.5" />
-              <div>
-                <span className="font-semibold text-neutral-900 block">
-                  Adresse de dépose
-                </span>
-                <span className="text-neutral-600">
-                  {order.customer.address}, {order.customer.postalCode} {order.customer.city}
-                </span>
-                {order.customer.accessConstraints?.notes && (
-                  <p className="text-[11px] text-neutral-500 mt-0.5 italic">
-                    « {order.customer.accessConstraints.notes} »
-                  </p>
-                )}
+            {/* Recipient & Access Card */}
+            <div className="p-4 rounded-xl bg-neutral-50 border border-neutral-200 text-xs space-y-2">
+              <div className="font-bold text-neutral-900 font-mono-hooden uppercase text-[11px]">
+                Adresse de livraison
               </div>
-            </div>
-
-            <div className="pt-2 border-t border-neutral-200/80 flex items-center justify-between text-[11px]">
-              <span className="text-neutral-500 font-mono-hooden">
-                {order.items.length} article{order.items.length > 1 ? 's' : ''} ({order.totalTTC.toFixed(2)} €)
-              </span>
-              <span className="text-emerald-700 font-medium font-mono-hooden">
-                Livraison offerte incluse
-              </span>
+              <div className="font-semibold text-neutral-900">
+                {order.customer.fullName}
+              </div>
+              <div className="text-neutral-600 text-[11px]">
+                {order.customer.address}
+              </div>
+              <div className="text-neutral-600 text-[11px] font-mono-hooden">
+                {order.customer.postalCode} {order.customer.city}
+              </div>
+              <div className="text-neutral-500 text-[11px] pt-1 border-t border-neutral-200">
+                Tél client : <span className="font-mono-hooden">{order.customer.phone}</span>
+              </div>
             </div>
           </div>
 
-          {/* Action CTAs */}
-          <div className="pt-2 flex items-center justify-between gap-3">
-            <button
-              onClick={() => setActiveTrackingOrder(null)}
-              className="text-xs font-semibold text-neutral-500 hover:text-neutral-900 transition-colors cursor-pointer px-2 py-1"
-            >
-              Fermer
-            </button>
+          {/* Ordered Items Summary */}
+          <div className="p-4 rounded-xl bg-neutral-50 border border-neutral-200 text-xs space-y-2">
+            <div className="font-bold text-neutral-900 font-mono-hooden uppercase text-[11px] flex items-center gap-1.5">
+              <Package className="w-3.5 h-3.5 text-amber-800" />
+              <span>Contenu de l'expédition</span>
+            </div>
+            <div className="space-y-1.5 divide-y divide-neutral-200">
+              {order.items.map((it, idx) => (
+                <div key={idx} className="flex items-center justify-between pt-1.5 first:pt-0">
+                  <span className="text-neutral-800">
+                    <strong>{it.quantity}x</strong> {it.product.name}
+                  </span>
+                  <span className="text-neutral-500 font-mono-hooden">
+                    {(it.product.volumeSteres * it.quantity).toFixed(1)} stères
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
 
+        {/* Footer */}
+        <div className="px-5 py-3.5 bg-neutral-50 border-t border-neutral-200 flex items-center justify-between gap-3 text-xs">
+          <div className="text-neutral-500 font-mono-hooden text-[11px] flex items-center gap-1.5">
+            <ShieldCheck className="w-3.5 h-3.5 text-emerald-700" />
+            <span>Livraison garantie sous abri</span>
+          </div>
+
+          <div className="flex items-center gap-2">
             <button
               onClick={() => {
-                const currentOrder = order;
                 setActiveTrackingOrder(null);
-                setActiveInvoiceOrder(currentOrder);
+                setActiveInvoiceOrder(order);
               }}
-              className="px-4 py-2 rounded-xl bg-neutral-900 hover:bg-neutral-800 text-white text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer shadow-xs"
+              className="px-3 py-1.5 rounded-lg border border-neutral-300 hover:bg-white text-neutral-800 font-semibold text-xs transition-colors cursor-pointer"
             >
-              <FileText className="w-3.5 h-3.5" />
-              <span>Voir la facture</span>
+              Voir la facture
+            </button>
+            <button
+              onClick={() => setActiveTrackingOrder(null)}
+              className="px-4 py-1.5 rounded-lg bg-neutral-900 hover:bg-neutral-800 text-white font-semibold text-xs transition-colors cursor-pointer"
+            >
+              Fermer
             </button>
           </div>
         </div>

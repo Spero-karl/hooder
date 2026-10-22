@@ -30,9 +30,9 @@ const MainLayout: React.FC = () => {
 
       {/* Header */}
       <Header
-        onOpenOrderLookup={() => setIsOrderLookupOpen(true)}
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
+        onOpenOrderLookup={() => setIsOrderLookupOpen(true)}
       />
 
       {/* Main E-commerce View */}
@@ -65,7 +65,10 @@ const MainLayout: React.FC = () => {
       <FaqSection />
 
       {/* Footer */}
-      <Footer onNavigate={() => {}} />
+      <Footer
+        onNavigate={() => {}}
+        onOpenOrderLookup={() => setIsOrderLookupOpen(true)}
+      />
 
       {/* Modals & Flow Components */}
       <CartDrawer />
